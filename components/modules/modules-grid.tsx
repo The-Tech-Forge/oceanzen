@@ -165,7 +165,7 @@ const modules = [
     description: "Digital library system with ISBN integration, automated book management, and online catalog.",
     features: ["Book Management", "ISBN Integration", "Online Catalog", "Issue/Return Tracking", "Fine Management"],
     benefits: ["Efficient book management", "Better tracking", "Reduced manual work"],
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/libraryM.jpg?height=200&width=300",
   },
   {
     id: "hostel",
@@ -175,7 +175,7 @@ const modules = [
     description: "Complete hostel administration with room allocation, mess management, and student welfare tracking.",
     features: ["Room Allocation", "Mess Management", "Visitor Management", "Maintenance Tracking", "Student Welfare"],
     benefits: ["Better accommodation management", "Improved student welfare", "Efficient operations"],
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/hostelM.jpg?height=200&width=300",
   },
   {
     id: "portal",
@@ -185,7 +185,7 @@ const modules = [
     description: "Mobile-friendly portals for parents and students with real-time updates and interactive features.",
     features: ["Mobile App", "Real-time Updates", "Interactive Dashboard", "Communication Tools", "Document Access"],
     benefits: ["Better engagement", "Improved communication", "Easy access to information"],
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/ParentstudentM.jpg?height=200&width=300",
   },
 ]
 

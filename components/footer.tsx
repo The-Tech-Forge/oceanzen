@@ -23,12 +23,12 @@ export function Footer() {
             </p>
             <div className="flex space-x-4">
               <Button variant="ghost" size="icon" asChild>
-                <Link href="https://facebook.com/YourPage" target="_blank" rel="noopener noreferrer">
+                {/* <Link href="https://facebook.com/YourPage" target="_blank" rel="noopener noreferrer">
                   <Facebook className="h-5 w-5" />
-                </Link>
+                </Link> */}
               </Button>
               <Button variant="ghost" size="icon" asChild>
-                <Link href="https://twitter.com/YourProfile" target="_blank" rel="noopener noreferrer">
+                <Link href="https://x.com/OceanzenS" target="_blank" rel="noopener noreferrer">
                   <Twitter className="h-5 w-5" />
                 </Link>
               </Button>
@@ -38,7 +38,7 @@ export function Footer() {
                 </Link>
               </Button>
               <Button variant="ghost" size="icon" asChild>
-                <Link href="https://instagram.com/YourProfile" target="_blank" rel="noopener noreferrer">
+                <Link href="https://www.instagram.com/oceanzen_services/" target="_blank" rel="noopener noreferrer">
                   <Instagram className="h-5 w-5" />
                 </Link>
               </Button>
