@@ -14,9 +14,11 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { CalendarIcon, Clock, Users, CheckCircle } from "lucide-react"
 import { format } from "date-fns"
+import { toast } from "sonner"
 
 export function DemoForm() {
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>()
   const [formData, setFormData] = useState({
     name: "",
@@ -31,9 +33,32 @@ export function DemoForm() {
     newsletter: false,
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSubmitted(true)
+    setIsLoading(true)
+
+    try {
+      const response = await fetch("/api/demo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          demoDate: selectedDate ? format(selectedDate, "PPP") : undefined,
+        }),
+      })
+
+      if (response.ok) {
+        setIsSubmitted(true)
+      } else {
+        toast.error("Failed to send demo request. Please try again later.")
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please check your connection.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleInputChange = (field: string, value: string | boolean) => {
@@ -257,9 +282,9 @@ export function DemoForm() {
                   </Label>
                 </div>
 
-                <Button type="submit" size="lg" className="w-full">
-                  Schedule Demo
-                  <CalendarIcon className="ml-2 h-4 w-4" />
+                <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
+                  {isLoading ? "Sending Request..." : "Schedule Demo"}
+                  {!isLoading && <CalendarIcon className="ml-2 h-4 w-4" />}
                 </Button>
               </form>
             </div>
@@ -292,14 +317,6 @@ export function DemoForm() {
                   <li>• Customization options</li>
                   <li>• Implementation process</li>
                 </ul>
-              </div>
-
-              <div className="text-center p-6 bg-gradient-to-br from-primary/10 to-cyan-500/10 rounded-lg">
-                <h3 className="font-semibold mb-2">Need Immediate Help?</h3>
-                <p className="text-sm text-muted-foreground mb-4">Call us directly for urgent inquiries</p>
-                <Button variant="outline" size="sm">
-                  +1-800-OCEANZEN
-                </Button>
               </div>
             </div>
           </div>

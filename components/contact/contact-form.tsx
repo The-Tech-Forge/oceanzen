@@ -11,9 +11,11 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Send, CheckCircle } from "lucide-react"
+import { toast } from "sonner"
 
 export function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,11 +26,30 @@ export function ContactForm() {
     newsletter: false,
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
-    setIsSubmitted(true)
-    setTimeout(() => setIsSubmitted(false), 3000)
+    setIsLoading(true)
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (response.ok) {
+        setIsSubmitted(true)
+        setTimeout(() => setIsSubmitted(false), 5000)
+      } else {
+        toast.error("Failed to send message. Please try again later.")
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please check your connection.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleInputChange = (field: string, value: string | boolean) => {
@@ -140,9 +161,9 @@ export function ContactForm() {
             </Label>
           </div>
 
-          <Button type="submit" size="lg" className="w-full">
-            Send Message
-            <Send className="ml-2 h-4 w-4" />
+          <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
+            {isLoading ? "Sending Message..." : "Send Message"}
+            {!isLoading && <Send className="ml-2 h-4 w-4" />}
           </Button>
         </form>
       </motion.div>

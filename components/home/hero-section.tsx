@@ -72,7 +72,7 @@ export function HeroSection() {
             transition={{ duration: 1, delay: 0.8 }}
             className="mt-16"
           >
-            <p className="text-sm text-muted-foreground mb-4">Trusted by 500+ Educational Institutions</p>
+            <p className="text-sm text-muted-foreground mb-4">20+ Modules</p>
             <div className="flex justify-center items-center space-x-8 opacity-60">
               <div className="text-2xl font-bold">Schools</div>
               <div className="text-2xl font-bold">Colleges</div>

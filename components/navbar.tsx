@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useRouter } from "nextjs-toploader/app"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -40,6 +41,13 @@ const navigation = [
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("#")) return // Let default anchor behavior handle hashes
+    e.preventDefault()
+    router.push(href)
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,7 +67,7 @@ export function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" onClick={(e) => handleLinkClick(e, "/")} className="flex items-center space-x-2">
             <Image src="/logo-png.png" alt="OceanZen Logo" width={40} height={40} />
             <span className="text-xl font-bold bg-gradient-to-r from-primary to-cyan-600 bg-clip-text text-transparent">
               OceanZen
@@ -81,6 +89,7 @@ export function Navbar() {
                             <NavigationMenuLink key={subItem.name} asChild>
                               <Link
                                 href={subItem.href}
+                                onClick={(e) => handleLinkClick(e, subItem.href)}
                                 className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                               >
                                 <div className="text-sm font-medium leading-none">{subItem.name}</div>
@@ -94,6 +103,7 @@ export function Navbar() {
                     <NavigationMenuLink asChild>
                       <Link
                         href={item.href}
+                        onClick={(e) => handleLinkClick(e, item.href)}
                         className={cn(
                           "group inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50",
                           pathname === item.href && "text-primary",
@@ -112,11 +122,8 @@ export function Navbar() {
           <div className="flex items-center space-x-4">
             <ThemeToggle />
             <div className="hidden md:flex items-center space-x-2">
-              <Button variant="ghost" asChild>
-                <Link href="/login">Login</Link>
-              </Button>
               <Button asChild>
-                <Link href="/demo">Request Demo</Link>
+                <Link href="/demo" onClick={(e) => handleLinkClick(e, "/demo")}>Request Demo</Link>
               </Button>
             </div>
 
@@ -133,6 +140,7 @@ export function Navbar() {
                     <div key={item.name}>
                       <Link
                         href={item.href}
+                        onClick={(e) => handleLinkClick(e, item.href)}
                         className={cn(
                           "block px-3 py-2 text-base font-medium rounded-md transition-colors hover:bg-accent",
                           pathname === item.href && "text-primary bg-accent",
@@ -146,6 +154,7 @@ export function Navbar() {
                             <Link
                               key={subItem.name}
                               href={subItem.href}
+                              onClick={(e) => handleLinkClick(e, subItem.href)}
                               className="block px-3 py-1 text-sm text-muted-foreground hover:text-foreground"
                             >
                               {subItem.name}
@@ -156,11 +165,8 @@ export function Navbar() {
                     </div>
                   ))}
                   <div className="pt-4 border-t">
-                    <Button variant="ghost" className="w-full justify-start" asChild>
-                      <Link href="/login">Login</Link>
-                    </Button>
                     <Button className="w-full mt-2" asChild>
-                      <Link href="/demo">Request Demo</Link>
+                      <Link href="/demo" onClick={(e) => handleLinkClick(e, "/demo")}>Request Demo</Link>
                     </Button>
                   </div>
                 </div>
