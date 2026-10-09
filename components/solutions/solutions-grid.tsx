@@ -231,7 +231,7 @@ export function SolutionsGrid() {
                     <Button variant="outline" asChild>
                       <a href="/contact">Learn More</a>
                     </Button>
-                  </div>
+                  </div>Request Demo
                 </div>
 
                 <div className={index % 2 === 1 ? "lg:col-start-1" : ""}>

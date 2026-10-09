@@ -35,6 +35,7 @@ const navigation = [
   { name: "Modules", href: "/modules" },
   { name: "About", href: "/about" },
   // { name: "Resources", href: "/resources" },
+  { name: "Register", href: "/new-org" },
   { name: "Contact", href: "/contact" },
 ]
 
