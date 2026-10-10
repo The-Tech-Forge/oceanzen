@@ -57,7 +57,12 @@ const validateWebsite = (value: string) => {
 
   try {
     const url = new URL(value)
-    return url.protocol === "http:" || url.protocol === "https:"
+    return (
+      url.protocol === "https:" &&
+      /^www\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z]{2,})+$/i.test(url.hostname) &&
+      !url.username &&
+      !url.password
+    )
   } catch {
     return false
   }
@@ -93,6 +98,25 @@ export function OrganizationRegistrationForm() {
   const [submissionError, setSubmissionError] = useState("")
   const [successData, setSuccessData] = useState<{ orgUrl: string; insUrl: string } | null>(null)
   const otpRefs = useRef<Array<HTMLInputElement | null>>([])
+  const formCardRef = useRef<HTMLDivElement | null>(null)
+  const isFirstRender = useRef(true)
+
+  const scrollToFormTop = () => {
+    if (formCardRef.current) {
+      formCardRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
+    } else if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+  }
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+
+    scrollToFormTop()
+  }, [currentStep])
 
   useEffect(() => {
     if (otpCountdown <= 0) return
@@ -150,6 +174,16 @@ export function OrganizationRegistrationForm() {
         }))
       }
     }
+  }
+
+  const handleWebsiteBlur = (field: "org_website" | "institute_website") => {
+    const value = form[field].trim()
+    setErrors((prev) => ({
+      ...prev,
+      [field]: value && !validateWebsite(value)
+        ? "Enter a full website URL, such as https://www.example.com."
+        : "",
+    }))
   }
 
   const handleCheckDomain = async (entity: "org" | "ins") => {
@@ -368,14 +402,14 @@ export function OrganizationRegistrationForm() {
 
     formData.append("org_name", form.org_name.trim())
     formData.append("org_address", form.org_address.trim())
-    formData.append("org_website", form.org_website.trim())
+    if (form.org_website?.trim()) formData.append("org_website", form.org_website.trim())
     formData.append("orgSubdomain", form.orgSubdomain.trim())
     if (form.org_logo) formData.append("org_logo", form.org_logo)
     if (form.org_bg) formData.append("org_bg", form.org_bg)
 
     formData.append("institute_name", form.institute_name.trim())
     formData.append("institute_address", form.institute_address.trim())
-    formData.append("institute_website", form.institute_website.trim())
+    if (form.institute_website?.trim()) formData.append("institute_website", form.institute_website.trim())
     formData.append("insSubdomain", form.insSubdomain.trim())
     if (form.ins_logo) formData.append("ins_logo", form.ins_logo)
     if (form.ins_bg) formData.append("ins_bg", form.ins_bg)
@@ -452,8 +486,17 @@ export function OrganizationRegistrationForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="org-website">Organization Website</Label>
-          <Input id="org-website" value={form.org_website} onChange={(event) => handleFieldChange("org_website", event.target.value)} placeholder="https://example.com" />
+          <Label htmlFor="org-website">Organization Website (Optional)</Label>
+          <Input
+            id="org-website"
+            type="url"
+            value={form.org_website}
+            onChange={(event) => handleFieldChange("org_website", event.target.value)}
+            onBlur={() => handleWebsiteBlur("org_website")}
+            placeholder="https://www.example.com"
+            aria-invalid={Boolean(errors.org_website)}
+          />
+          <p className="text-xs text-muted-foreground">Include https:// and www. This field is optional.</p>
           {errors.org_website && <p className="text-xs text-red-600">{errors.org_website}</p>}
         </div>
 
@@ -501,8 +544,17 @@ export function OrganizationRegistrationForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="institute-website">Institute Website</Label>
-          <Input id="institute-website" value={form.institute_website} onChange={(event) => handleFieldChange("institute_website", event.target.value)} placeholder="https://school.example.com" />
+          <Label htmlFor="institute-website">Institute Website (Optional)</Label>
+          <Input
+            id="institute-website"
+            type="url"
+            value={form.institute_website}
+            onChange={(event) => handleFieldChange("institute_website", event.target.value)}
+            onBlur={() => handleWebsiteBlur("institute_website")}
+            placeholder="https://www.school.example.com"
+            aria-invalid={Boolean(errors.institute_website)}
+          />
+          <p className="text-xs text-muted-foreground">Include https:// and www. This field is optional.</p>
           {errors.institute_website && <p className="text-xs text-red-600">{errors.institute_website}</p>}
         </div>
 
@@ -755,7 +807,7 @@ export function OrganizationRegistrationForm() {
   return (
     <div className="min-h-screen bg-background px-4 pb-20 pt-24">
       <div className="mx-auto max-w-6xl">
-        <Card className="overflow-hidden border-0 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
+        <Card ref={formCardRef} className="scroll-mt-24 overflow-hidden border-0 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
           <CardHeader className="border-b bg-gradient-to-r from-slate-900 via-sky-950 to-sky-900 p-6 text-white">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
@@ -782,7 +834,11 @@ export function OrganizationRegistrationForm() {
                       type="button"
                       onClick={() => {
                         if (index <= currentStep) {
-                          setCurrentStep(index)
+                          if (index === currentStep) {
+                            scrollToFormTop()
+                          } else {
+                            setCurrentStep(index)
+                          }
                         }
                       }}
                       className={cn(

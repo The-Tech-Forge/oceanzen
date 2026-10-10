@@ -1,4 +1,4 @@
-import type { ChangeEvent } from "react"
+import { useState, type ChangeEvent } from "react"
 import { ImageIcon, UploadCloud, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -14,26 +14,28 @@ interface ImageUploadFieldProps {
 
 export function ImageUploadField({ label, file, onChange, hint, error }: ImageUploadFieldProps) {
   const inputId = `${label.toLowerCase().replace(/\s+/g, "-")}-upload`
+  const [validationError, setValidationError] = useState("")
+  const displayedError = validationError || error
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const nextFile = event.target.files?.[0] ?? null
-    if (!nextFile) {
-      onChange(null)
-      return
-    }
+    if (!nextFile) return
 
-    if (!nextFile.type.startsWith("image/")) {
+    if (!["image/png", "image/jpeg", "image/webp"].includes(nextFile.type)) {
+      setValidationError("Choose a PNG, JPG, or WEBP image.")
       onChange(null)
       event.target.value = ""
       return
     }
 
     if (nextFile.size > 500 * 1024) {
+      setValidationError("The image must be 500 KB or smaller.")
       onChange(null)
       event.target.value = ""
       return
     }
 
+    setValidationError("")
     onChange(nextFile)
   }
 
@@ -43,7 +45,7 @@ export function ImageUploadField({ label, file, onChange, hint, error }: ImageUp
         {label}
       </label>
 
-      <div className={cn("rounded-xl border border-dashed bg-muted/30 p-4 transition-colors", error && "border-red-300 bg-red-50/50")}>
+      <div className={cn("rounded-xl border border-dashed bg-muted/30 p-4 transition-colors", displayedError && "border-red-300 bg-red-50/50")}>
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 overflow-hidden">
             <div className="rounded-lg border bg-background p-2 text-muted-foreground">
@@ -57,7 +59,7 @@ export function ImageUploadField({ label, file, onChange, hint, error }: ImageUp
 
           <div className="flex items-center gap-2">
             {file ? (
-              <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null)} className="text-muted-foreground hover:text-foreground">
+              <Button type="button" variant="ghost" size="sm" onClick={() => { setValidationError(""); onChange(null) }} className="text-muted-foreground hover:text-foreground">
                 <X className="mr-1 h-4 w-4" />
                 Remove
               </Button>
@@ -74,7 +76,7 @@ export function ImageUploadField({ label, file, onChange, hint, error }: ImageUp
         <input id={inputId} type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={handleFileChange} />
       </div>
 
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {displayedError && <p className="text-xs text-red-600" role="alert">{displayedError}</p>}
     </div>
   )
 }
