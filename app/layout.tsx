@@ -10,10 +10,10 @@ import NextTopLoader from "nextjs-toploader"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "OceanZen ERP - Comprehensive Educational Management System",
+  title: "OceanZen | Cluster ERP for Educational Institutions",
   description:
-    "Empower your educational institution with OceanZen ERP - a complete administrative and academic solution for schools, colleges, and universities.",
-  keywords: "ERP, Education Management, School Management System, College ERP, University Management",
+    "Cluster ERP by OceanZen helps educational institutions manage students, academics, examinations, admissions, and multi-institute operations with a single platform.",
+  keywords: "Cluster ERP, Education Management, School Management System, College ERP, University Management, Multi-Institute ERP",
   generator: 'v0.dev'
 }
 

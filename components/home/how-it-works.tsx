@@ -2,84 +2,57 @@
 
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
-import { CheckCircle, Users, Settings, Rocket } from "lucide-react"
+import { Building2, CheckCircle2, LayoutGrid, Users } from "lucide-react"
 
 const steps = [
   {
-    icon: Users,
-    title: "Consultation & Planning",
-    description: "Our experts analyze your institution's needs and create a customized implementation plan.",
+    icon: Building2,
+    title: "Register Your Organization",
+    description: "Submit the required organization information through the registration flow.",
     step: "01",
   },
   {
-    icon: Settings,
-    title: "Setup & Configuration",
-    description: "We configure the system according to your requirements and migrate your existing data.",
+    icon: LayoutGrid,
+    title: "Configure Your Institutes",
+    description: "Set up the appropriate institutes and their dedicated subdomains.",
     step: "02",
   },
   {
-    icon: CheckCircle,
-    title: "Training & Testing",
-    description: "Comprehensive training for your staff and thorough testing to ensure everything works perfectly.",
+    icon: Users,
+    title: "Complete Onboarding",
+    description: "Configure users, permissions, and relevant academic workflows, then begin using the platform after the necessary setup and activation.",
     step: "03",
-  },
-  {
-    icon: Rocket,
-    title: "Go Live & Support",
-    description: "Launch your new system with our ongoing support and maintenance for smooth operations.",
-    step: "04",
   },
 ]
 
 export function HowItWorks() {
   return (
-    <section className="py-20 bg-muted/30">
+    <section className="bg-muted/30 py-20">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            How <span className="text-primary">It Works</span>
+        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} viewport={{ once: true }} className="mb-16 text-center">
+          <h2 className="mb-6 text-3xl font-bold md:text-5xl">
+            Get Started With Cluster in <span className="text-primary">Three Steps</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Our proven implementation process ensures a smooth transition to OceanZen ERP with minimal disruption to
-            your operations.
-          </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid gap-8 md:grid-cols-3">
           {steps.map((step, index) => (
-            <motion.div
-              key={step.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              <Card className="h-full text-center hover:shadow-lg transition-all duration-300">
-                <CardContent className="p-8">
-                  <div className="relative mb-6">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+            <motion.div key={step.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: index * 0.15 }} viewport={{ once: true }} className="relative">
+              <Card className="h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <CardContent className="p-8 text-center">
+                  <div className="relative mb-6 inline-block">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                       <step.icon className="h-8 w-8 text-primary" />
                     </div>
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold">
+                    <div className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
                       {step.step}
                     </div>
                   </div>
-                  <h3 className="text-xl font-semibold mb-4">{step.title}</h3>
+                  <h3 className="mb-4 text-xl font-semibold">{step.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{step.description}</p>
                 </CardContent>
               </Card>
-
-              {/* Connection Line */}
-              {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-primary/30 transform -translate-y-1/2"></div>
-              )}
+              {index < steps.length - 1 && <div className="absolute right-[-20px] top-1/2 hidden h-0.5 w-10 -translate-y-1/2 bg-primary/30 lg:block" />}
             </motion.div>
           ))}
         </div>
