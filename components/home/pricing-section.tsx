@@ -15,39 +15,39 @@ const pricingPoints = [
 
 export function PricingSection() {
   return (
-    <section className="bg-slate-50 py-20 md:py-24">
+    <section className="bg-slate-50 py-20 dark:bg-slate-950 md:py-24">
       <div className="container mx-auto px-4">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mx-auto max-w-4xl rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_30px_80px_-30px_rgba(15,23,42,0.25)] md:p-12">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mx-auto max-w-4xl rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_30px_80px_-30px_rgba(15,23,42,0.25)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20 md:p-12">
           <div className="text-center">
-            <span className="inline-flex rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-sky-700">
+            <span className="inline-flex rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-sky-700 dark:border-sky-800 dark:bg-sky-950 dark:text-sky-300">
               Simple Pricing
             </span>
-            <h2 className="mt-6 text-3xl font-bold tracking-tight text-slate-900 md:text-5xl">
+            <h2 className="mt-6 text-3xl font-bold tracking-tight text-slate-900 dark:text-white md:text-5xl">
               Your Entire Educational ERP. Just ₹150 Per User, Per Year.
             </h2>
-            <p className="mt-5 text-lg text-slate-600">
+            <p className="mt-5 text-lg text-slate-600 dark:text-slate-300">
               Simple, transparent annual pricing for educational institutions. Get access to Cluster ERP for just ₹150 per user per year, with no additional charges beyond the stated subscription price.
             </p>
           </div>
 
-          <div className="mt-10 flex flex-col items-center justify-center rounded-[1.75rem] border border-sky-100 bg-gradient-to-br from-sky-50 via-white to-cyan-50 p-8 text-center md:p-10">
-            <div className="flex items-end justify-center gap-2 text-slate-900">
+          <div className="mt-10 flex flex-col items-center justify-center rounded-[1.75rem] border border-sky-100 bg-gradient-to-br from-sky-50 via-white to-cyan-50 p-8 text-center dark:border-sky-900 dark:from-sky-950 dark:via-slate-900 dark:to-cyan-950 md:p-10">
+            <div className="flex items-end justify-center gap-2 text-slate-900 dark:text-white">
               <span className="text-5xl font-black tracking-tight md:text-7xl">₹150*</span>
             </div>
-            <div className="mt-3 text-lg font-semibold text-slate-700">Per User / Year</div>
-            <p className="mt-4 text-base text-slate-600">One simple annual price. No additional charges.</p>
+            <div className="mt-3 text-lg font-semibold text-slate-700 dark:text-slate-200">Per User / Year</div>
+            <p className="mt-4 text-base text-slate-600 dark:text-slate-300">One simple annual price. No additional charges.</p>
           </div>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             {pricingPoints.map((point) => (
-              <div key={point} className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+              <div key={point} className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-800">
                 <CheckCircle2 className="mt-0.5 h-5 w-5 text-sky-600" />
-                <span className="text-sm font-medium text-slate-700">{point}</span>
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{point}</span>
               </div>
             ))}
           </div>
 
-          <div className="mt-8 text-center text-sm text-slate-600">
+          <div className="mt-8 text-center text-sm text-slate-600 dark:text-slate-300">
             * Pricing is subject to change. Contact OceanZen to confirm the applicable price at the time of purchase.
           </div>
 
@@ -58,7 +58,7 @@ export function PricingSection() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="bg-white text-slate-900">
+            <Button asChild size="lg" variant="outline" className="bg-white text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
               <Link href="/org-registration">Register Your Organization</Link>
             </Button>
           </div>
