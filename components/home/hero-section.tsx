@@ -32,11 +32,9 @@ export function HeroSection() {
               <Building2 className="h-4 w-4" />
               OceanZen by Cluster ERP
             </div>
-
-            <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
-              One Powerful ERP for Your Entire Educational Institution
+            <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-slate-900 dark:text-white md:text-5xl lg:text-6xl">
+              One Powerful ERP for Your Entire Educational Organization
             </h1>
-
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600 md:text-xl">
               Manage students, admissions, academics, examinations, teachers, and institutional operations through a unified educational ERP platform.
             </p>
@@ -48,8 +46,7 @@ export function HeroSection() {
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Button asChild size="lg" className="ocean-gradient text-lg text-white shadow-lg shadow-sky-500/20 hover:opacity-95">
                 <Link href="/org-registration">
-Launch Your ERP in 5 Simple Steps
-
+                  Launch Your ERP in 5 Simple Steps
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
