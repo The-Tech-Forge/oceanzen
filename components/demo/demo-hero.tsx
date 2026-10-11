@@ -9,7 +9,7 @@ const benefits = [
   "Q&A with our experts",
   "Custom solution discussion",
   "Implementation timeline",
-  "Pricing information",
+  "Custom deployment options",
 ]
 
 import Image from "next/image"

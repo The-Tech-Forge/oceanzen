@@ -42,15 +42,15 @@ const faqs = [
         ]
     },
     {
-        category: "Security & Pricing",
+        category: "Security & Customization",
         questions: [
             {
                 q: "Is our data secure?",
                 a: "Security is our top priority. We use industry-standard encryption, regular backups, and secure cloud hosting to ensure your data is always protected and accessible only to authorized users."
             },
             {
-                q: "How is the pricing determined?",
-                a: "Our pricing is flexible and based on the number of students and the modules you choose. We offer monthly and annual subscription plans to fit different budgets."
+                q: "Can OceanZen ERP be customized or hosted on our campus?",
+                a: "Yes! OceanZen provides custom ERP development tailored precisely to your institution's specific workflows. We also support both secure Cloud hosting and On-Campus local server installations."
             },
             {
                 q: "Can we export our data if we decide to leave?",

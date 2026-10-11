@@ -481,7 +481,7 @@ export function OrganizationRegistrationForm() {
 
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="org-address">Organization Address</Label>
-          <Textarea id="org-address" value={form.org_address} onChange={(event) => handleFieldChange("org_address", event.target.value)} rows={4} placeholder="Nagpur, Maharashtra" />
+          <Textarea id="org-address" value={form.org_address} onChange={(event) => handleFieldChange("org_address", event.target.value)} rows={4} placeholder="New Delhi, India" />
           {errors.org_address && <p className="text-xs text-red-600">{errors.org_address}</p>}
         </div>
 
@@ -539,7 +539,7 @@ export function OrganizationRegistrationForm() {
 
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="institute-address">Institute Address</Label>
-          <Textarea id="institute-address" value={form.institute_address} onChange={(event) => handleFieldChange("institute_address", event.target.value)} rows={4} placeholder="Nagpur, Maharashtra" />
+          <Textarea id="institute-address" value={form.institute_address} onChange={(event) => handleFieldChange("institute_address", event.target.value)} rows={4} placeholder="New Delhi, India" />
           {errors.institute_address && <p className="text-xs text-red-600">{errors.institute_address}</p>}
         </div>
 

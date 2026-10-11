@@ -20,7 +20,7 @@ export function CTASection() {
 
           <div className="mb-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button size="lg" variant="secondary" className="text-lg px-8 py-6" asChild>
-              <Link href="/org-registration">
+              <Link href="/registration">
                 Get Started
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
@@ -32,8 +32,8 @@ export function CTASection() {
 
           <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-3">
             <div className="text-center">
-              <div className="mb-2 text-3xl font-bold">₹150</div>
-              <div className="opacity-90">per user per year</div>
+              <div className="mb-2 text-3xl font-bold">100%</div>
+              <div className="opacity-90">Custom & On-Campus Ready</div>
             </div>
             <div className="text-center">
               <div className="mb-2 text-3xl font-bold">1</div>
