@@ -9,60 +9,98 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { CalendarIcon, Clock, Users, CheckCircle } from "lucide-react"
-import { format } from "date-fns"
+import { Clock, Users, CheckCircle, CalendarIcon } from "lucide-react"
 import { toast } from "sonner"
+import { useContactUsStore, getApiFieldErrors } from "@/store/contactUsStore"
+import { InsType } from "@/dto/contact"
+
+const TIME_SLOTS = [
+  { label: "9:00 AM - 10:00 AM", value: "9:00 AM" },
+  { label: "10:00 AM - 11:00 AM", value: "10:00 AM" },
+  { label: "11:00 AM - 12:00 PM", value: "11:00 AM" },
+  { label: "2:00 PM - 3:00 PM", value: "2:00 PM" },
+  { label: "3:00 PM - 4:00 PM", value: "3:00 PM" },
+  { label: "4:00 PM - 5:00 PM", value: "4:00 PM" },
+]
+
+const FIELD_ERROR_MAP: Record<string, (keyof typeof initialFormData)[]> = {
+  full_name: ["full_name"],
+  mobile_no: ["mobile_no"],
+  email: ["email"],
+  ins_name: ["ins_name"],
+  ins_type: ["ins_type"],
+  demo_date: ["demo_date"],
+  demo_time: ["demo_time"],
+  message: ["message"],
+}
+
+const initialFormData = {
+  full_name: "",
+  mobile_no: "",
+  email: "",
+  ins_name: "",
+  ins_type: "" as InsType | "",
+  demo_date: "",
+  demo_time: "",
+  message: "",
+}
+
+type FormData = typeof initialFormData
+type FieldErrors = Partial<Record<keyof FormData, string>>
 
 export function DemoForm() {
+  const { requestDemo } = useContactUsStore()
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<Date>()
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    institution: "",
-    institutionType: "",
-    studentCount: "",
-    currentSystem: "",
-    timeSlot: "",
-    requirements: "",
-    newsletter: false,
-  })
+  const [formData, setFormData] = useState<FormData>(initialFormData)
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+
+  const parseFieldErrors = (messages: string[]): FieldErrors => {
+    const errors: FieldErrors = {}
+    for (const msg of messages) {
+      for (const [key, fields] of Object.entries(FIELD_ERROR_MAP)) {
+        if (msg.toLowerCase().includes(key)) {
+          for (const field of fields) {
+            errors[field] = msg
+          }
+        }
+      }
+    }
+    return errors
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setFieldErrors({})
     setIsLoading(true)
 
     try {
-      const response = await fetch("/api/demo", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          demoDate: selectedDate ? format(selectedDate, "PPP") : undefined,
-        }),
+      await requestDemo({
+        full_name: formData.full_name.trim(),
+        mobile_no: formData.mobile_no.trim(),
+        email: formData.email.trim(),
+        ins_name: formData.ins_name.trim(),
+        ins_type: formData.ins_type as InsType,
+        demo_date: formData.demo_date.trim(),
+        demo_time: formData.demo_time,
+        message: formData.message.trim() || undefined,
       })
-
-      if (response.ok) {
-        setIsSubmitted(true)
+      setIsSubmitted(true)
+    } catch (error: any) {
+      const messages = getApiFieldErrors(error)
+      if (messages.length > 0) {
+        setFieldErrors(parseFieldErrors(messages))
       } else {
         toast.error("Failed to send demo request. Please try again later.")
       }
-    } catch (error) {
-      toast.error("An error occurred. Please check your connection.")
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleInputChange = (field: string, value: string | boolean) => {
+  const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
+    setFieldErrors((prev) => ({ ...prev, [field]: undefined }))
   }
 
   if (isSubmitted) {
@@ -133,14 +171,15 @@ export function DemoForm() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="name">Full Name *</Label>
+                    <Label htmlFor="full_name">Full Name *</Label>
                     <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => handleInputChange("name", e.target.value)}
+                      id="full_name"
+                      value={formData.full_name}
+                      onChange={(e) => handleInputChange("full_name", e.target.value)}
                       required
                       className="mt-2"
                     />
+                    {fieldErrors.full_name && <p className="text-destructive text-xs mt-1">{fieldErrors.full_name}</p>}
                   </div>
                   <div>
                     <Label htmlFor="email">Email Address *</Label>
@@ -152,134 +191,96 @@ export function DemoForm() {
                       required
                       className="mt-2"
                     />
+                    {fieldErrors.email && <p className="text-destructive text-xs mt-1">{fieldErrors.email}</p>}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="phone">Phone Number *</Label>
+                    <Label htmlFor="mobile_no">Mobile Number *</Label>
                     <Input
-                      id="phone"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange("phone", e.target.value)}
+                      id="mobile_no"
+                      value={formData.mobile_no}
+                      onChange={(e) => handleInputChange("mobile_no", e.target.value)}
+                      required
+                      placeholder="e.g. 8795265485"
+                      className="mt-2"
+                    />
+                    {fieldErrors.mobile_no && <p className="text-destructive text-xs mt-1">{fieldErrors.mobile_no}</p>}
+                  </div>
+                  <div>
+                    <Label htmlFor="ins_name">Institution Name *</Label>
+                    <Input
+                      id="ins_name"
+                      value={formData.ins_name}
+                      onChange={(e) => handleInputChange("ins_name", e.target.value)}
                       required
                       className="mt-2"
                     />
+                    {fieldErrors.ins_name && <p className="text-destructive text-xs mt-1">{fieldErrors.ins_name}</p>}
                   </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="ins_type">Institution Type *</Label>
+                  <Select
+                    onValueChange={(value) => handleInputChange("ins_type", value)}
+                    value={formData.ins_type}
+                  >
+                    <SelectTrigger id="ins_type" className="mt-2">
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={InsType.SINGLE_INSTITUTE}>Single Institute</SelectItem>
+                      <SelectItem value={InsType.ORGANIZATION}>Organization / Chain</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {fieldErrors.ins_type && <p className="text-destructive text-xs mt-1">{fieldErrors.ins_type}</p>}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="institution">Institution Name *</Label>
+                    <Label htmlFor="demo_date">Preferred Demo Date *</Label>
                     <Input
-                      id="institution"
-                      value={formData.institution}
-                      onChange={(e) => handleInputChange("institution", e.target.value)}
+                      id="demo_date"
+                      type="date"
+                      value={formData.demo_date}
+                      min={new Date().toISOString().split("T")[0]}
+                      onChange={(e) => handleInputChange("demo_date", e.target.value)}
                       required
                       className="mt-2"
                     />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <Label htmlFor="institutionType">Institution Type *</Label>
-                    <Select onValueChange={(value) => handleInputChange("institutionType", value)}>
-                      <SelectTrigger className="mt-2">
-                        <SelectValue placeholder="Select type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="school">School (K-12)</SelectItem>
-                        <SelectItem value="college">College</SelectItem>
-                        <SelectItem value="university">University</SelectItem>
-                        <SelectItem value="training">Training Institute</SelectItem>
-                        <SelectItem value="government">Government Institution</SelectItem>
-                        <SelectItem value="ngo">NGO/Foundation</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    {fieldErrors.demo_date && <p className="text-destructive text-xs mt-1">{fieldErrors.demo_date}</p>}
                   </div>
                   <div>
-                    <Label htmlFor="studentCount">Number of Students</Label>
-                    <Select onValueChange={(value) => handleInputChange("studentCount", value)}>
-                      <SelectTrigger className="mt-2">
-                        <SelectValue placeholder="Select range" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1-100">1-100</SelectItem>
-                        <SelectItem value="101-500">101-500</SelectItem>
-                        <SelectItem value="501-1000">501-1000</SelectItem>
-                        <SelectItem value="1001-5000">1001-5000</SelectItem>
-                        <SelectItem value="5000+">5000+</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <Label>Preferred Demo Date</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-start text-left font-normal mt-2 bg-transparent"
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar mode="single" selected={selectedDate} onSelect={setSelectedDate} initialFocus />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                  <div>
-                    <Label htmlFor="timeSlot">Preferred Time</Label>
-                    <Select onValueChange={(value) => handleInputChange("timeSlot", value)}>
-                      <SelectTrigger className="mt-2">
+                    <Label htmlFor="demo_time">Preferred Time *</Label>
+                    <Select onValueChange={(value) => handleInputChange("demo_time", value)} value={formData.demo_time}>
+                      <SelectTrigger id="demo_time" className="mt-2">
                         <SelectValue placeholder="Select time" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="9am">9:00 AM - 10:00 AM</SelectItem>
-                        <SelectItem value="10am">10:00 AM - 11:00 AM</SelectItem>
-                        <SelectItem value="11am">11:00 AM - 12:00 PM</SelectItem>
-                        <SelectItem value="2pm">2:00 PM - 3:00 PM</SelectItem>
-                        <SelectItem value="3pm">3:00 PM - 4:00 PM</SelectItem>
-                        <SelectItem value="4pm">4:00 PM - 5:00 PM</SelectItem>
+                        {TIME_SLOTS.map((slot) => (
+                          <SelectItem key={slot.value} value={slot.value}>
+                            {slot.label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
+                    {fieldErrors.demo_time && <p className="text-destructive text-xs mt-1">{fieldErrors.demo_time}</p>}
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="currentSystem">Current System (if any)</Label>
-                  <Input
-                    id="currentSystem"
-                    value={formData.currentSystem}
-                    onChange={(e) => handleInputChange("currentSystem", e.target.value)}
-                    placeholder="e.g., Manual processes, Excel, other ERP system"
-                    className="mt-2"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="requirements">Specific Requirements or Questions</Label>
+                  <Label htmlFor="message">Message</Label>
                   <Textarea
-                    id="requirements"
-                    value={formData.requirements}
-                    onChange={(e) => handleInputChange("requirements", e.target.value)}
+                    id="message"
+                    value={formData.message}
+                    onChange={(e) => handleInputChange("message", e.target.value)}
                     rows={4}
                     className="mt-2"
                     placeholder="Tell us about your specific needs, challenges, or any particular modules you're interested in..."
                   />
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="newsletter"
-                    checked={formData.newsletter}
-                    onCheckedChange={(checked) => handleInputChange("newsletter", checked as boolean)}
-                  />
-                  <Label htmlFor="newsletter" className="text-sm">
-                    Subscribe to our newsletter for educational technology insights
-                  </Label>
+                  {fieldErrors.message && <p className="text-destructive text-xs mt-1">{fieldErrors.message}</p>}
                 </div>
 
                 <Button type="submit" size="lg" className="w-full" disabled={isLoading}>

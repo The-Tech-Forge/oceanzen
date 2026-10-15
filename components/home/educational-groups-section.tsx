@@ -62,7 +62,7 @@ export function EducationalGroupsSection() {
                 <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/20 text-sky-200">
                   <Layers3 className="h-5 w-5" />
                 </div>
-                <div className="text-2xl font-bold">3 Institutes</div>
+                <div className="text-2xl font-bold">Many Institutes</div>
                 <p className="mt-2 text-sm text-slate-300">Give each institute its own dedicated identity and access layer.</p>
               </div>
               <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 sm:col-span-2">
